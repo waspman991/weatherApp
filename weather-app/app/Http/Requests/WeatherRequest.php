@@ -16,6 +16,8 @@ class WeatherRequest extends FormRequest
         return [
             'lat' => 'required|numeric',
             'lon' => 'required|numeric',
+            'api_key' => 'nullable|string',
+
         ];
     }
 }

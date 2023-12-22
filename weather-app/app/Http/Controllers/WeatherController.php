@@ -17,15 +17,19 @@ class WeatherController extends Controller
 
     public function getWeather(WeatherRequest $request)
     {
-//        dd($request->all());
-        $latitude = $request->input('lat');
-        $longitude = $request->input('lon');
+        try {
+            $validatedData = $request->validated();
+            $latitude =  $validatedData['lat'];
+            $longitude = $validatedData['lon'];
+            $apiKey = $validatedData['api_key'];
 
-        $weatherData = $this->weatherService->getWeather($latitude, $longitude);
+            $weatherData = $this->weatherService->getWeather($latitude, $longitude, $apiKey);
 
-        return view('weather.result', ['weatherData' => $weatherData]);
-
-//        return response()->json($weatherData);
+            return view('weather.result', ['weatherData' => $weatherData]);
+        } catch (\Exception $e) {
+            // redirect to initial form with error message
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }
     }
 
     public function showForm()
